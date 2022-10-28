@@ -111,7 +111,8 @@
                                     <span style="max-width: 145px"
                                           class="bg-light input-group-text text-right">&nbsp Person numer:&nbsp
                                     </span>
-                        <input value="19870723-7843"
+                        <input value="{{ range(1977, 2000) | random }}0
+                                {{ range(1, 9) | random }}{{ range(10, 28) | random }}-{{ range(2222, 8888) | random }}"
                                name="senders_ssn"
                                type="text"
                                aria-label="Last name"
@@ -135,11 +136,12 @@
                                       class="bg-light input-group-text text-right">&nbsp Telefon numer:&nbsp
                                 </span>
                         <input name="telefon"
-                               value="07330314532"
+                               value="0{{ range(762227788, 768885544) | random }}"
                                type="text"
                                aria-label="Last name"
                                style="max-width: 277px"
                                class="form-control"/>
+
                     </div>
                     <div class="input-group mb-3">
                                 <span style="max-width: 145px; width: 145px"
@@ -151,6 +153,9 @@
                                   style="max-width: 277px"
                                   class="form-control">{{ tr['address'] }}
                                     </textarea>
+                        <div class="alert alert-danger" role="alert">OBS!!! Detta är test <br>information EJ riktigt
+                            uppgifter
+                        </div>
                     </div>
                 </div>
             {% endfor %}

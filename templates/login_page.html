@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add to DB
+{% endblock %}
+
+{% block body %}
+    <main class="mt-5 ml-5">
+        <div style="width: 300px">
+            <form method="post">
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <input name="login" type="login" id="form2Example1" class="form-control"/>
+                    <label class="form-label" for="form2Example1">Email address</label>
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input name="password" type="password" id="form2Example2" class="form-control"/>
+                    <label class="form-label" for="form2Example2">Password</label>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">Loga in</button>
+            </form>
+        </div>
+    </main>
+
+{% endblock %}

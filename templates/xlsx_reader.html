@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add to DB
+{% endblock %}
+
+{% block body %}
+
+    <div class="mb-3" style="width: 240px">
+        <form enctype="multipart/form-data" method="post" name="input_file">
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file"
+                           class="btn btn-secondary custom-file-input"
+                           id="xlsx_file"
+                           name="xlsx_file"
+                           data-buttonText="Your label here.">
+                    <div class="mt-3" style="text-align: right">
+                        <button name="file_submit" class="btn btn-info" type="submit" value=Upload>Granska</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if result %}
+        <form method="post" name="transactions">
+
+            <div class="mb-3 input-group">
+
+                <span class="input-group-text">Datum: </span>
+                <input name="date"
+                       type="text"
+                       value="{{ date }}"
+                       class="input-group-text bg-white" readonly>
+
+                <span class="input-group-text">Antal Transaktioner: </span>
+                <div class="input-group-text bg-white">{{ result|length }}</div>
+
+                <span class="input-group-text">Totala Belopp: </span>
+                <div class="input-group-text bg-white">{{ total_amount }}</div>
+
+                <span class="input-group-text">Banken: </span>
+                <select name="bank" class="text-left bg-white form-control form-select"
+                        aria-label="Default select example"
+                        style="text-align: end">
+                    <option selected>Välja Bank</option>
+                    <option value="1">Danske Banken</option>
+                    <option value="2">Nordea</option>
+                </select>
+
+                <span class="input-group-text">Klart granskad</span>
+                <button name="transaktions_list" type="submit" class="btn btn btn-success">Spara i archive</button>
+
+            </div>
+
+            {% for tr in result %}
+                <div class="input-group mb-3">
+                    <button class="btn btn-primary bg-info"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#collapse_{{ tr["id"] }}"
+                            aria-expanded="false"
+                            aria-controls="collapse_{{ tr["id"] }}">
+                        {{ tr["id"] }}
+                    </button>
+                    <input name="reference" value="{{ tr['reference'] }}" style="display:none;" readonly>
+                    <button class="btn btn-primary"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#collapse_sender_{{ tr["id"] }}"
+                            aria-expanded="false"
+                            aria-controls="collapse_sender_{{ tr["id"] }}">
+                        Avsändaren:
+                    </button>
+                    <input class="text-left form-control"
+                           name="senders_name"
+                           style="text-align: end"
+                           value="{{ tr['sender_name'] }}"
+                           type="text"
+                           aria-label="sender">
+                    <span class="input-group-text">Mottagare: </span>
+                    <input class="text-left form-control"
+                           name="receiver_name"
+                           style="text-align: end"
+                           value="{{ tr['receiver_name'] }}"
+                           type="text"
+                           aria-label="receiver">
+                    <span class="input-group-text">Belopp:</span>
+                    <input class="text-left form-control"
+                           name="amount"
+                           style="text-align: end"
+                           value="{{ tr['amount'] }}"
+                           type="text"
+                           aria-label="receiver"
+                           readonly>
+                    <span class="input-group-text">Anledning: </span>
+                    <select name="reason"
+                            class="text-left form-control form-select"
+                            aria-label="Default select example"
+                            style="text-align: end">
+                        <option selected>Välja anledning</option>
+                        <option value="1">Gåva</option>
+                        <option value="2">Köpet</option>
+                        <option value="3">Lån</option>
+                    </select>
+                </div>
+                <div class="collapse" id="collapse_{{ tr["id"] }}">{{ tr }}</div>
+                <div class="collapse"
+                     id="collapse_sender_{{ tr["id"] }}">
+                    <div class="input-group">
+                                    <span style="max-width: 145px"
+                                          class="bg-light input-group-text text-right">&nbsp Person numer:&nbsp
+                                    </span>
+                        <input value="19870723-7843"
+                               name="senders_ssn"
+                               type="text"
+                               aria-label="Last name"
+                               style="max-width: 277px"
+                               class="form-control"/>
+                        <span style="max-width: 145px"
+                              class="input-group-text">Document: </span>
+                        <select class="text-left form-control form-select"
+                                aria-label="Default select example"
+                                style="text-align: end; max-width: 277px"
+                                name="senders_document">
+                            <option selected>Välja anledning</option>
+                            <option value="1">Svenska Passet</option>
+                            <option value="2">Körkort</option>
+                            <option value="3">ID-kort</option>
+                            <option value="3">Annat document</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                                <span style="max-width: 145px"
+                                      class="bg-light input-group-text text-right">&nbsp Telefon numer:&nbsp
+                                </span>
+                        <input name="telefon"
+                               value="07330314532"
+                               type="text"
+                               aria-label="Last name"
+                               style="max-width: 277px"
+                               class="form-control"/>
+                    </div>
+                    <div class="input-group mb-3">
+                                <span style="max-width: 145px; width: 145px"
+                                      class="bg-light input-group-text text-right">&nbsp Adressen:&nbsp
+                                </span>
+                        <textarea type="text"
+                                  name="address"
+                                  aria-label="Last name"
+                                  style="max-width: 277px"
+                                  class="form-control">{{ tr['address'] }}
+                                    </textarea>
+                    </div>
+                </div>
+            {% endfor %}
+            <div style="text-align: end">
+                Klart granskad:
+                <button type="submit" class="btn btn btn-success" name="transaktions_list"> Spara i archive</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

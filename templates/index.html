@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add to DB
+{% endblock %}
+
+{% block body %}
+    <main class="mt-5">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.3/xlsx.full.min.js"></script>
+        <div class="mb-3">
+            <div style="width: 240px">
+                <select class="form-select" aria-label="Default select example" id="bank">
+                    <option selected value="0">Välj BANK</option>
+                    <option value="1">Nordea</option>
+                    <option value="2">Handelsbank</option>
+                </select>
+                <div id="label_for_huvudkonto" class="form-text">Välj bank som har utfärdat cvs fil</div>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file"
+                               class="custom-file-input"
+                               id="cvs_file"
+                               name="cvs_file"
+                               data-buttonText="Your label here.">
+                        <label class="custom-file-label" for="inputGroupFile02">Välj csv fil</label>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" id="action_form" style="display: none">
+                <div class="mb-3 ">
+                    <label for="title" class="form-label">Title*</label>
+                    <input type="text" class="form-control" id="title" aria-describedby="title" name="title"
+                           value="NoNaMe AB">
+                    <div id="title" class="form-text ">Petros and Cooperated AB</div>
+                </div>
+
+                <div class="mb-3 justify-content-end">
+                    <label for="summary" class="form-label">Summary information</label>
+                    <input type="text" class="form-control justify-content-end" id="summary" aria-describedby="summary"
+                           name="summary">
+                    <div id="label_for_summary" class="form-text">Summary ex. 250 000 000 kr</div>
+                </div>
+
+                <div id="error_msg" class="mb-3 justify-content-end" style="color: red"></div>
+                <script>
+                    let filter_list = {
+                        {% for filter in filters %}
+                            "{{filter.quote_id}}":
+                                [
+                                    {
+                                        "konto": "{{ filter.konto }}",
+                                        "filter_str": "{{ filter.filter }}"
+                                    }
+                                ],
+                        {% endfor %}
+                    }
+                </script>
+                <script src="{{ url_for('static',filename='js/accounting.js') }}"></script>
+                <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+                <button id="submit_button" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}

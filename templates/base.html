@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" class="h-100 align-items-center">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+          crossorigin="anonymous">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="d-flex w-100  p-3 mx-auto flex-column">
+
+    <header class="content container mb-auto">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="/xlsx_reader"
+                        {% if request.path == "/xlsx_reader" or request.path == "/" %}
+                   class="active nav-link"
+                        {% else %}
+                   class="nav-link"
+                        {% endif %}>
+                    XLSX läsare
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/bank_statements"
+                        {% if request.path == "/bank_statements" %}
+                   class="active nav-link"
+                        {% else %}
+                   class="nav-link"
+                        {% endif %}>
+                    Transaktioner
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/settings"
+                        {% if request.path == "/senders" %}
+                   class="active nav-link"
+                        {% else %}
+                   class="nav-link"
+                        {% endif %}>Avsändare
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/vat"
+                        {% if request.path == "/receiver" %}
+                   class="active nav-link"
+                        {% else %}
+                   class="nav-link"
+                        {% endif %}>
+                    Mottagare
+                </a>
+            </li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-item"><a href="/logout"
+                        {% if request.path == "/logout" %}
+                                        class="active nav-link"
+                        {% else %}
+                                        class="nav-link"
+                        {% endif %}>Logaut</a>
+                </li>
+            {% endif %}
+        </ul>
+    </header>
+    <main class="mt-5 content">
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+    </main>
+    <footer class="mt-auto text-white-50 content container">
+        <div class="d-flex align-items-center">
+            <span class="text-muted">© Developed by Alexander Shchetinin</span>
+            <ul class="nav mt-auto justify-content-end d-flex">
+                <li class="ms-3">
+                    <a class="text-muted" href="mailto:alshfu@hmail.com">
+                        <i class="bi bi-mail"></i>
+                    </a>
+                </li>
+                <li class="ms-3">
+                    <a class="text-muted" href="#">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+</div>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+</body>
+</html>

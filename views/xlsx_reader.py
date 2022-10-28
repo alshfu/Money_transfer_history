@@ -46,7 +46,7 @@ def xlsx_reader():
                 tr_sender = Senders(l_name=tr_sender_name[i].split()[0],
                                     f_name=tr_sender_name[i].split()[1],
                                     ssn=tr_senders_ssn[i],
-                                    phone_number=tr_senders_telefon)
+                                    phone_number=tr_senders_telefon[i])
                 db.session.add(tr_sender)
                 db.session.add(tr)
                 db.session.commit()

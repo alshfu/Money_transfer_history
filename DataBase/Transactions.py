@@ -76,6 +76,9 @@ class MoneyTransactions(db_model):
         self.bank_id = tr_bank_id
         self.sender_ssn = sender_ssn
 
+    def __repr__(self):
+        return '<Reference %r>' % self.reference
+
 
 class Senders(db_model):
     __table_name__ = "senders"

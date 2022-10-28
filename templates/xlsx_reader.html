@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="mb-3">
+        <div class="alert text-center alert-success"  role="alert">
+            Här kan du granska din Bank-giro file
+        </div>
+    </div>
     <div class="mb-3" style="width: 240px">
         <form enctype="multipart/form-data" method="post" name="input_file">
             <div class="input-group mb-3">
@@ -107,6 +111,7 @@
                 <div class="collapse" id="collapse_{{ tr["id"] }}">{{ tr }}</div>
                 <div class="collapse"
                      id="collapse_sender_{{ tr["id"] }}">
+                    <div class="alert alert-info" role="alert">Information om sändaren</div>
                     <div class="input-group">
                                     <span style="max-width: 145px"
                                           class="bg-light input-group-text text-right">&nbsp Person numer:&nbsp

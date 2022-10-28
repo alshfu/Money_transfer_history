@@ -48,7 +48,7 @@ def xlsx_reader():
                                     ssn=tr_senders_ssn[i],
                                     phone_number=tr_senders_telefon[i])
                 db.session.add(tr_sender)
-                db.session.commit()
+                db.session.add(tr)
                 db.session.commit()
         else:
             print("Im not hre")

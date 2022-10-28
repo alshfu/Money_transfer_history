@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add to DB
+{% endblock %}
+
+{% block body %}
+
+    <div class="mb-3">
+        <div class="alert text-center alert-success" role="alert">
+            ÖVERFÖRINGAR
+        </div>
+    </div>
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Sändaren</th>
+            <th scope="col">Belopp</th>
+            <th scope="col">Mottagare</th>
+            <th scope="col">Anledning</th>
+            <th scope="col">Bank</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if result %}
+            {% for tr in result %}
+                <tr>
+                    <th scope="col">{{ tr["id"] }}</th>
+                    <td>{{ tr["date"] }}</td>
+                    <td>{{ tr["sender_ssn"] }}</td>
+                    <td class="text-right">{{ tr["amount"] }}</td>
+                    <td class="text-warning">OBS!!! inte klart än</td>
+                    <td>{{ tr["reason"] }}</td>
+                    <td>{{ tr["bank_id"] }}</td>
+                </tr>
+
+            {% endfor %}
+
+        {% endif %}
+{% endblock %}

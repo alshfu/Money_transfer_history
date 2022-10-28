@@ -89,12 +89,11 @@ class Senders(db_model):
 
     transactions = db.relationship('MoneyTransactions', back_populates="sender")
 
-    def __init__(self, f_name, l_name, ssn, telefon, senders_email):
+    def __init__(self, f_name, l_name, ssn, telefon):
         self.l_name = l_name,
         self.ssn = ssn,
         self.f_name = f_name,
-        self.telefon = telefon,
-        self.email = senders_email
+        self.telefon = telefon
 
 
 if __name__ == "__main__":

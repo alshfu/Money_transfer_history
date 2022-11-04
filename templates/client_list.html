@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Överföringar
+{% endblock %}
+
+{% block body %}
+    <div class="mb-3">
+        <div class="alert text-center alert-success" role="alert">
+            Kund list
+        </div>
+    </div>
+    <!--table class="table table-striped"-->
+    <form class="form-inline" method="POST">
+        <div class="input-group mb-3">
+            <div class="input-group-text">Hitta kund</div>
+            <input type="text" name="search" class="input-group form-control text-end"
+                   id="inlineFormInputGroupUsername2"
+                   placeholder="Ange persson nummer eller telefon nummer">
+            <button type="submit" class="btn btn-primary">Sök</button>
+        </div>
+
+
+    </form>
+    <script src="static/js/table.js"></script>
+    <table class="table">
+        <thead class="">
+        <tr class="border">
+            <th span="col">Förnamn</th>
+            <th span="col">Efternamn</th>
+            <th span="col">Persson nummer</th>
+            <th span="col">Antal överföraningar</th>
+            <th span="col">Typ av ID handling</th>
+            <th span="col">Telefon nummer</th>
+        </tr>
+        </thead>
+        <tbody id="accordion" class="table-primary">
+        {% if result %}{% for client in result %}
+            <tr>
+                <td>{{ client.f_name }}</td>
+                <td>{{ client.l_name }}</td>
+                <td><a href="/client_profile?ssn={{ client.ssn }}">{{ client.ssn }}</a></td>
+                <td>{{ client.transactions|length }}</td>
+                <td>{{ client.document.type_of_docs }}</td>
+                <td>{{ client.telefon }}</td>
+            </tr>
+        {% endfor %}{% endif %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

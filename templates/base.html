@@ -1,3 +1,25 @@
+{%- macro format_price(price, thousand_separator=' ', decimal_separator='.', decimal_places=2) -%}
+{%- set price_as_string = price | string -%}
+{%- set price_split = price_as_string.split('.') -%}
+{%- set price_integer = price_split[0] -%}
+{%- if price_split | count > 1 -%}
+{%- set price_fraction = price_split[1] -%}
+{%- if price_fraction | length < decimal_places -%}
+{%- set price_fraction = price_fraction.ljust(decimal_places, '0') -%}
+{%- else -%}
+{%- set price_fraction = price_fraction[:decimal_places] -%}
+{%- endif -%}
+{%- else -%}
+{%- set price_fraction = '' -%}
+{%- endif -%}
+{%- set formatted_price_integer = price_integer | reverse | batch(3) | map('join', '') | join(thousand_separator) | reverse -%}
+{%- if price_fraction != '' -%}
+{%- set formatted_price = formatted_price_integer ~ decimal_separator ~ price_fraction -%}
+{%- else -%}
+{%- set formatted_price = formatted_price_integer-%}
+{%- endif -%}
+{{- formatted_price -}}
+{%- endmacro -%}
 <!doctype html>
 <html lang="en" class="h-100 align-items-center">
 <head>
@@ -10,6 +32,8 @@
           rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
           crossorigin="anonymous">
+    <!-- MDB -->
+    <link href="static/css/custom.css" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -38,22 +62,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/settings"
-                        {% if request.path == "/senders" %}
+                <a href="/client_list"
+                        {% if request.path == "/client_list" %}
                    class="active nav-link"
                         {% else %}
                    class="nav-link"
-                        {% endif %}>Avsändare
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/vat"
-                        {% if request.path == "/receiver" %}
-                   class="active nav-link"
-                        {% else %}
-                   class="nav-link"
-                        {% endif %}>
-                    Mottagare
+                        {% endif %}>Kunder
                 </a>
             </li>
             {% if current_user.is_authenticated %}
@@ -65,7 +79,12 @@
                         {% endif %}>Logaut</a>
                 </li>
             {% endif %}
+            <li>
+                    <input class="form-check-input" type="checkbox" id="lightSwitch"/>
+
+            </li>
         </ul>
+
     </header>
     <main class="mt-5 content">
         <div class="container">
@@ -90,6 +109,7 @@
         </div>
     </footer>
 </div>
+
 <!-- JavaScript Bundle with Popper -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -100,5 +120,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+<script src="/static/js/switch.js"></script>
 </body>
 </html>

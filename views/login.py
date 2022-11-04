@@ -6,7 +6,6 @@ from flask_login import login_user
 from flask_login import logout_user
 
 from DataBase.DataBase import db
-from DataBase.Transactions import create_simple_transaction
 from DataBase.User import User
 
 login_manager = LoginManager()

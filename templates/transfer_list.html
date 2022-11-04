@@ -1,42 +1,81 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Add to DB
+    Överföringar
 {% endblock %}
 
 {% block body %}
-
     <div class="mb-3">
         <div class="alert text-center alert-success" role="alert">
             ÖVERFÖRINGAR
         </div>
     </div>
-    <table class="table table-sm">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Datum</th>
-            <th scope="col">Sändaren</th>
-            <th scope="col">Belopp</th>
-            <th scope="col">Mottagare</th>
-            <th scope="col">Anledning</th>
-            <th scope="col">Bank</th>
+    <!--table class="table table-striped"-->
+    <form class="form-inline" method="POST">
+        <div class="input-group mb-3">
+            <div class="input-group-text">Sök för överföring</div>
+            <input type="text" name="search" class="input-group form-control text-end" id="inlineFormInputGroupUsername2"
+                   placeholder="Ange persson nummer, belopp eller referens">
+            <button type="submit" class="btn btn-primary">Sök</button>
+        </div>
+
+
+    </form>
+    <script src="static/js/table.js"></script>
+    <table class="table">
+        <thead class="">
+        <tr class="border">
+            <th class="border border-primary" span="col">#</th>
+            <th span="col">Datum</th>
+            <th span="col">Sändaren</th>
+            <th span="col">Belopp</th>
+            <th span="col">Mottagare</th>
+            <th span="col">Anledning</th>
+            <th span="col">Bank</th>
         </tr>
         </thead>
-        <tbody>
-        {% if result %}
-            {% for tr in result %}
-                <tr>
-                    <th scope="col">{{ tr["id"] }}</th>
-                    <td>{{ tr["date"] }}</td>
-                    <td>{{ tr["sender_ssn"] }}</td>
-                    <td class="text-right">{{ tr["amount"] }}</td>
-                    <td class="text-warning">OBS!!! inte klart än</td>
-                    <td>{{ tr["reason"] }}</td>
-                    <td>{{ tr["bank_id"] }}</td>
-                </tr>
+        <tbody id="accordion" class="table-primary">
+        {% if result %}{% for tr in result %}
+            <tr data-toggle="collapse"
+                data-target="#collapse_id_{{ tr["id"] }}"
+                aria-expanded="true"
+                aria-controls="collapse_id_{{ tr["id"] }}">
+                <th class="border border-primary" scope="row">{{ tr["id"] }}</th>
+                <td>{{ tr["date"] }}</td>
+                <td><a href="/client_profile?ssn={{ tr["sender"].ssn }}">{{ tr["sender"].ssn }}</a></td>
+                <td>{{ tr["amount"] }}</td>
+                <td>{{ tr["receiver"].name }}</td>
+                <td>{{ tr["reason"] }}</td>
+                <td>{{ tr["bank"] }}</td>
+            </tr>
+            <tr aria-rowspan="2"
+                id="collapse_id_{{ tr["id"] }}"
+                class="collapse table-info"
+                aria-labelledby="headingOne"
+                data-parent="#collapse_id_{{ tr["id"] }}">
+                <th colspan="2">Sändaren:</th>
+                <td>{{ tr["sender"].f_name }} {{ tr["sender"].l_name }}</td>
+                <td>Tel:</td>
+                <td>{{ tr["sender"].telefon }}</td>
+                <td>{{ tr["sender"].email }}</td>
+                <td class="text-success">{{ tr["origin"].name }}</td>
+            </tr>
+            <tr aria-rowspan="2"
+                id="collapse_id_{{ tr["id"] }}"
+                class="collapse table-success"
+                aria-labelledby="headingOne"
+                data-parent="#collapse_id_{{ tr["id"] }}">
+                <th colspan="2">Mottagaren:</th>
+                <td>{{ tr["receiver"].name }}</td>
+                <td>Land: {{ tr["receiver"].country }}</td>
+                <td>Reference: {{ tr["reference"] }}</td>
+                <td>Relation till avsändare:</td>
+                <td>{{ tr["receiver"].relation_to_sender }}</td>
+            </tr>
 
-            {% endfor %}
+        {% endfor %}{% endif %}
+        </tbody>
+    </table>
 
-        {% endif %}
+
 {% endblock %}

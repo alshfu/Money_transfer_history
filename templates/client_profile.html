@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+
+</html>{% extends 'base.html' %}
+
+{% block title %}
+    Överföringar
+{% endblock %}
+
+{% block body %}
+    <div class="mb-3">
+        <div class="alert text-center alert-success" role="alert">
+            Profil sida för {{ client.f_name }} {{ client.l_name }}
+        </div>
+    </div>
+    <!--table class="table table-striped"-->
+    <div>
+        <div class="col mb-3 ">
+            <div class="card bg-info" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <img src="static/img/profile.png"
+                                 alt="Generic placeholder image" class="img-fluid"
+                                 style="width: 206px; border-radius: 10px;">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1 ">{{ client.f_name }} {{ client.l_name }}</h5>
+                            <p class="mb-1" style="color: #2b2a2a;"><strong>Address:</strong> {{ client.address }}</p>
+                            <p class="mb-1" style="color: #2b2a2a;"><strong>Persson nummer:</strong> {{ client.ssn }}
+                            </p>
+                            <p class="mb-1" style="color: #2b2a2a;"><strong>Telefon:</strong> {{ client.telefon }}
+                                <strong>E-post:</strong>{{ client.email }}</p>
+                            <p class="mb-1" style="color: #2b2a2a;"><strong>ID
+                                handling:</strong> {{ client.document.type_of_docs }} <strong>Giltig
+                                till:</strong> {{ client.document.expire_date }}</p>
+                            <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                 style="background-color: #efefef;">
+                                <div>
+                                    <p class="small text-muted mb-1">Antal Överföraningar</p>
+                                    <p class="mb-0">{{ client.transactions|length }}</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="small text-muted mb-1">Totala Belopp</p>
+
+                                    <p class="mb-0">{{ format_price(amount) }} SEK</p>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-1">Högsta belopp</p>
+                                    <p class="mb-0">{{ format_price(amount_max) }} SEK</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    <button class="mb-3 btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseProfile"
+            aria-expanded="false"
+            aria-controls="collapseExample">Redigera Profile</button>
+    </div>
+    <div id="collapseProfile" class="collapse container-xl px-4 mt-4">
+        <hr class="mt-0 mb-4">
+        <div class="row">
+            <div class="col">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header">Redigera Profile</div>
+                    <div class="card-body">
+                        <form method="post">
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputFirstName">Förnamn:</label>
+                                    <input name="f_name" class="form-control" id="inputFirstName" type="text"
+                                           value="{{ client.f_name }}">
+                                </div>
+                                <!-- Form Group (last name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputLastName">Efternamn:</label>
+                                    <input name="l_name" class="form-control" id="inputLastName" type="text"
+                                           value="{{ client.l_name }}">
+                                </div>
+                            </div>
+                            <!-- Form Row        -->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (organization name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputOrgName">Personnummer:</label>
+                                    <input name="ssn" class="form-control" id="inputOrgName" type="text"
+                                           value="{{ client.ssn }}">
+                                </div>
+                                <!-- Form Group (location)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputLocation">Telefon numer:</label>
+                                    <input class="form-control" id="inputLocation" type="text"
+                                           placeholder="Enter your location" value="{{ client.telefon }}">
+                                </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (email address)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputEmailAddress">E-post:</label>
+                                    <input class="form-control" id="inputEmailAddress" type="email" name="e_mail"
+                                           value="{{ client.email }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputPhone">Giltighets datum för id handling:</label>
+                                    <input class="form-control" id="inputPhone"
+                                           name="expire_date" value="{{ client.document.expire_date }}">
+                                </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (phone number)-->
+
+                                    <!-- Form Group (birthday)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputBirthday">Typ av id handling</label>
+                                        <select name="type_of_senders_document"
+                                                id="doc_expire_date"
+                                                class="text-left form-control form-select"
+                                                aria-label="Default select example"
+                                                style="text-align: end"
+                                                required>
+                                            <!--option selected disabled>Välja typ av ID-handling</option-->
+                                            <option>Välj id handling</option>
+                                            <option value="Svenska Passet">Svenska Passet</option>
+                                            <option value="Körkort">Körkort</option>
+                                            <option value="ID-kort">ID-kort</option>
+                                            <option value="Annat document">Annat document</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                            <label class="small mb-1" for="inputBirthday">Uppdatera ID handlings file:</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="form-control custom-file-input" id="inputGroupFile01">
+                                            </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- Form Row-->
+
+                            <!-- Save changes button-->
+                            <button class="btn btn-primary" type="submit">Spara Ändringar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="">
+        <tr class="border">
+            <th class="border border-primary" span="col">#</th>
+            <th span="col">Datum</th>
+            <th span="col">Sändaren</th>
+            <th class="text-end" span="col">Belopp</th>
+            <th span="col">Mottagare</th>
+            <th span="col">Anledning</th>
+            <th span="col">Bank</th>
+        </tr>
+        </thead>
+        <tbody id="accordion" class="table-primary">
+        {% if transactions %}{% for tr in transactions %}
+            <tr data-toggle="collapse"
+                data-target="#collapse_id_{{ tr.id }}"
+                aria-expanded="true"
+                aria-controls="collapse_id_{{ tr.id }}">
+                <th class="border border-primary" scope="row">{{ tr.id }}</th>
+                <td>{{ tr.date }}</td>
+                <td><a href="/client_profile?ssn={{ tr }}">{{ client.f_name }} {{ client.l_name }}</a></td>
+                <td class="text-end">{{ format_price(tr.amount) }}</td>
+                <td>{{ tr.receiver.name }}</td>
+                <td>{{ tr.reason.name }}</td>
+                <td>{{ tr.bank.name }}</td>
+            </tr>
+            <tr aria-rowspan="2"
+                id="collapse_id_{{ tr.id }}"
+                class="collapse table-info"
+                aria-labelledby="headingOne"
+                data-parent="#collapse_id_{{ tr.id }}">
+                <th colspan="2">Sändaren:</th>
+                <td>{{ tr.sender.f_name }} {{ tr }}</td>
+                <td>Tel:</td>
+                <td>{{ tr.sender.telefon }}</td>
+                <td>{{ tr.sender.email }}</td>
+                <td class="text-success">{{ tr.origin_of_money_id.name }}</td>
+            </tr>
+            <tr aria-rowspan="2"
+                id="collapse_id_{{ tr.id }}"
+                class="collapse table-success"
+                aria-labelledby="headingOne"
+                data-parent="#collapse_id_{{ tr.id }}">
+                <th colspan="2">Mottagaren:</th>
+                <td>{{ tr.receiver.name }}</td>
+                <td>Land: {{ tr.receiver.country }}</td>
+                <td>Reference: {{ tr.reference }}</td>
+                <td>Relation till avsändare:</td>
+                <td>{{ tr.receiver.relation_to_sender }}</td>
+            </tr>
+
+        {% endfor %}{% endif %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -5,32 +5,28 @@
 {% endblock %}
 
 {% block body %}
-<div class="mb-3">
-        <div class="alert text-center alert-success"  role="alert">
+    <div class="mb-3">
+        <div class="alert text-center alert-success" role="alert">
             Här kan du granska din Bank-giro file
         </div>
     </div>
-    <div class="mb-3" style="width: 240px">
+    <div class="mb-3" style="width: 360px">
         <form enctype="multipart/form-data" method="post" name="input_file">
             <div class="input-group mb-3">
-                <div class="custom-file">
-                    <input type="file"
-                           class="btn btn-secondary custom-file-input"
-                           id="xlsx_file"
-                           name="xlsx_file"
-                           data-buttonText="Your label here.">
-                    <div class="mt-3" style="text-align: right">
-                        <button name="file_submit" class="btn btn-info" type="submit" value=Upload>Granska</button>
-                    </div>
-                </div>
+                <input type="file"
+                       class="form-control input-group bg-danger"
+                       id="xlsx_file"
+                       name="xlsx_file"
+                       data-buttonText="Your label here.">
+                <button name="file_submit" class="input-group-text btn btn-info" type="submit" value=Upload>Granska
+                </button>
             </div>
         </form>
     </div>
     {% if result %}
-        <form method="post" name="transactions">
+        <form method="post" name="transactions" id="wrapper">
 
             <div class="mb-3 input-group">
-
                 <span class="input-group-text">Datum: </span>
                 <input name="date"
                        type="text"
@@ -46,10 +42,10 @@
                 <span class="input-group-text">Banken: </span>
                 <select name="bank" class="text-left bg-white form-control form-select"
                         aria-label="Default select example"
-                        style="text-align: end">
-                    <option selected>Välja Bank</option>
-                    <option value="1">Danske Banken</option>
-                    <option value="2">Nordea</option>
+                        style="text-align: end" required>
+                    <option selected disabled value="">Välja Bank</option>
+                    <option value="2">Danske Banken</option>
+                    <option value="1">Nordea</option>
                 </select>
 
                 <span class="input-group-text">Klart granskad</span>
@@ -59,6 +55,7 @@
 
             {% for tr in result %}
                 <div class="input-group mb-3">
+                    <!-- ID and Show Information from file -->
                     <button class="btn btn-primary bg-info"
                             type="button"
                             data-toggle="collapse"
@@ -67,7 +64,9 @@
                             aria-controls="collapse_{{ tr["id"] }}">
                         {{ tr["id"] }}
                     </button>
-                    <input name="reference" value="{{ tr['reference'] }}" style="display:none;" readonly>
+                    <!-- Reference Readonly-->
+                    <input name="reference" class="bg-success" value="{{ tr['reference'] }}" style="display:none;" readonly>
+                    <!-- Show Sender information -->
                     <button class="btn btn-primary"
                             type="button"
                             data-toggle="collapse"
@@ -76,20 +75,33 @@
                             aria-controls="collapse_sender_{{ tr["id"] }}">
                         Avsändaren:
                     </button>
+                    <!-- Senders Name -->
                     <input class="text-left form-control"
                            name="senders_name"
                            style="text-align: end"
                            value="{{ tr['sender_name'] }}"
                            type="text"
                            aria-label="sender">
-                    <span class="input-group-text">Mottagare: </span>
+                    <!-- Show Receiver information -->
+                    <!-- Show Sender information -->
+                    <button class="btn btn-warning"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#collapse_receiver_{{ tr["id"] }}"
+                            aria-expanded="false"
+                            aria-controls="collapse_receiver_{{ tr["id"] }}">
+                        Mottagare
+                    </button>
+                    <!-- Receiver Name -->
                     <input class="text-left form-control"
                            name="receiver_name"
                            style="text-align: end"
                            value="{{ tr['receiver_name'] }}"
                            type="text"
                            aria-label="receiver">
+                    <!-- Amount Title -->
                     <span class="input-group-text">Belopp:</span>
+                    <!-- Amount Value -->
                     <input class="text-left form-control"
                            name="amount"
                            style="text-align: end"
@@ -97,76 +109,216 @@
                            type="text"
                            aria-label="receiver"
                            readonly>
+                    <!-- Reasons Title -->
                     <span class="input-group-text">Anledning: </span>
+                    <!-- Reasons Value -->
                     <select name="reason"
                             class="text-left form-control form-select"
                             aria-label="Default select example"
-                            style="text-align: end">
-                        <option selected>Välja anledning</option>
-                        <option value="1">Gåva</option>
-                        <option value="2">Köpet</option>
-                        <option value="3">Lån</option>
+                            style="text-align: end" required>
+                        {% for reason in reasons %}
+                            <option selected value="{{ reason.id }}">{{ reason.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <!-- Origin of money Title -->
+                    <span class="input-group-text">Pengarnas ursprung:</span>
+                    <!-- Origin of money Value -->
+                    <select name="origin"
+                            class="text-left form-control form-select"
+                            aria-label="Default select example"
+                            style="text-align: end" required>
+                        {% for origin in origins %}
+                            <option selected value="{{ origin.id }}">{{ origin.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
+                <!-- Information from file hidden -->
                 <div class="collapse" id="collapse_{{ tr["id"] }}">{{ tr }}</div>
-                <div class="collapse"
-                     id="collapse_sender_{{ tr["id"] }}">
-                    <div class="alert alert-info" role="alert">Information om sändaren</div>
-                    <div class="input-group">
-                                    <span style="max-width: 145px"
-                                          class="bg-light input-group-text text-right">&nbsp Person numer:&nbsp
+                <!-- Information about Sender hidden -->
+                <div class="collapse" id="collapse_sender_{{ tr["id"] }}">
+                    <!-- information title and name of sender -->
+                    <div id="sender_info_{{ tr["id"] }}" class="alert alert-info" role="alert">Information om
+                        sändaren: {{ tr['sender_name'] }}</div>
+                    <!-- ssn, type of document -->
+                    <div class="input-group mb-3">
+                        <!-- ssn title -->
+                        <span style="max-width: 145px"
+                              class="bg-light input-group-text text-right">&nbsp Person numer:&nbsp
                                     </span>
-                        <input value="{{ range(1977, 2000) | random }}0{{ range(1, 9) | random }}{{ range(10, 28) | random }}-{{ range(2222, 8888) | random }}"
+                        <!-- ssn sender -->
+                        <input
+                                value="{{ range(1977, 2000) | random }}0{{ range(1, 9) | random }}{{ range(10, 28) | random }}-{{ range(2222, 8888) | random }}"
+                                name="senders_ssn"
+                                type="text"
+                                aria-label="Last name"
+                                style="max-width: 277px"
+                                class="form-control"/>
+                        <!-- input value=""
                                name="senders_ssn"
                                type="text"
                                aria-label="Last name"
                                style="max-width: 277px"
-                               class="form-control"/>
-                        <span style="max-width: 145px"
+                               class="form-control"
+                               placeholder="ÅÅÅÅMMDD-XXXX"
+                               required-->
+                        <!-- title document -->
+                        <span style="max-width: 145px; "
+                              id="doc_title"
                               class="input-group-text">Document: </span>
-                        <select class="text-left form-control form-select"
+                        <!-- Document of sender -->
+                        <select name="type_of_senders_document"
+                                id="doc_expire_date"
+                                class="text-left form-control form-select"
                                 aria-label="Default select example"
-                                style="text-align: end; max-width: 277px"
-                                name="senders_document">
-                            <option selected>Välja anledning</option>
-                            <option value="1">Svenska Passet</option>
-                            <option value="2">Körkort</option>
-                            <option value="3">ID-kort</option>
-                            <option value="3">Annat document</option>
+                                style="text-align: end"
+                                required>
+                            <!--option selected disabled>Välja typ av ID-handling</option-->
+                            <option>Välj id handling</option>
+                            <option value="Svenska Passet">Svenska Passet</option>
+                            <option value="Körkort">Körkort</option>
+                            <option value="ID-kort">ID-kort</option>
+                            <option value="Annat document">Annat document</option>
                         </select>
                     </div>
-                    <div class="input-group">
-                                <span style="max-width: 145px"
-                                      class="bg-light input-group-text text-right">&nbsp Telefon numer:&nbsp
-                                </span>
+                    <!-- telefon nr, expire date of document, document file -->
+                    <div class="input-group" style="" id="sender_phone">
+                        <!-- phone number title -->
+                        <span style="max-width: 145px"
+                              class="bg-light input-group-text text-right">&nbsp Telefon numer:&nbsp
+                        </span>
+                        <!-- phone number -->
                         <input name="telefon"
                                value="0{{ range(762227788, 768885544) | random }}"
                                type="text"
                                aria-label="Last name"
                                style="max-width: 277px"
-                               class="form-control"/>
-
+                               class="form-control">
+                        <!-- input name="telefon"
+                               value=""
+                               placeholder="0{{ range(762227788, 768885544) | random }}"
+                               type="text"
+                               aria-label="Last name"
+                               style="max-width: 277px"
+                               class="form-control"
+                               required/-->
+                        <!-- expire date Title -->
+                        <span style="max-width: 145px"
+                              class="bg-light input-group-text text-right">Giltighets datum:
+                        </span>
+                        <!-- Expire date -->
+                        <!-- input name="expire_date"
+                               value=""
+                               type="date"
+                               aria-label=""
+                               style="max-width: 236px"
+                               class="form-control"
+                               required/ -->
+                        <input name="expire_date"
+                               value="{{ range(2023, 2033) | random }}-{{ range(10, 12) | random }}-{{ range(10, 28) | random }}"
+                               type="date"
+                               aria-label=""
+                               style="max-width: 236px"
+                               class="form-control"
+                               required/>
+                        <!-- Document file Title -->
                     </div>
-                    <div class="input-group mb-3">
-                                <span style="max-width: 145px; width: 145px"
-                                      class="bg-light input-group-text text-right">&nbsp Adressen:&nbsp
+                    <!-- address -->
+                    <div class="input-group mb-3" id="sender_address" style="">
+                        <!-- adress Title-->
+                        <span style="max-width: 145px; width: 145px"
+                              class="bg-light input-group-text text-right">Adressen:
                                 </span>
-                        <textarea type="text"
-                                  name="address"
+                        <!-- address -->
+                        <textarea name="address"
+                                  type="text"
                                   aria-label="Last name"
                                   style="max-width: 277px"
                                   class="form-control">{{ tr['address'] }}
-                                    </textarea>
-                        <div class="alert alert-danger" role="alert">OBS!!! Detta är test <br>information EJ riktigt
-                            uppgifter
-                        </div>
+                        </textarea>
+                        <!-- Warning message -->
+                    </div>
+                </div>
+                <!-- Information about Receiver hidden -->
+                <div class="collapse" id="collapse_receiver_{{ tr["id"] }}">
+                    <!-- information title and name of sender -->
+                    <div class="alert alert-warning" role="alert">Information om
+                        Mottagare: {{ tr['receiver_name'] }}</div>
+                    <!-- ssn, type of document -->
+                    <div class="input-group mb-3">
+                        <!-- Country Title -->
+                        <span style="max-width: 145px"
+                              class="bg-light input-group-text text-right">Välj Land
+                        </span>
+                        <!-- Country Receiver -->
+                        <select name="country"
+                                class="text-left form-control form-select"
+                                aria-label="Default select example"
+                                style="text-align: end; max-width: 277px"
+                                required>
+                            <!--option selected disabled>Välja typ av ID-handling</option-->
+                            <option value="">Välj</option>
+                            <option value="Angola" selected="selected">Angola</option>
+                            <option value="Storbritannien/UK">Storbritannien/UK</option>
+                            <option value="Djibouti">Djibouti</option>
+                            <option value="Egypten">Egypten</option>
+                            <option value="Etiopien">Etiopien</option>
+                            <option value="Förenade Arabemiraten">Förenade Arabemiraten</option>
+                            <option value="Grekland">Grekland</option>
+                            <option value="Indien">Indien</option>
+                            <option value="Indonesien">Indonesien</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Kina">Kina</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Malta">Malta</option>
+                            <option value="Oman">Oman</option>
+                            <option value="Saudiarabien">Saudiarabien</option>
+                            <option selected value="Somalia">Somalia</option>
+                            <option value="Somaliland">Somaliland</option>
+                            <option value="Sydafrika">Sydafrika</option>
+                            <option value="Tanzania">Tanzania</option>
+                            <option value="Turkiet">Turkiet</option>
+                            <option value="Uganda">Uganda</option>
+                            <option value="Zambia">Zambia</option>
+                        </select>
+                        <!-- Relationship title -->
+                        <span
+                                class="bg-light input-group-text text-right">Relation till mottagaren
+                        </span>
+                        <!-- relationship between Sender and Receiver -->
+                        <select name="relationship"
+                                class="text-left form-control form-select"
+                                aria-label="Default select example"
+                                style="text-align: end; max-width: 277px"
+                                required>
+                            <!--option selected disabled>Välja typ av ID-handling</option-->
+                            <option>Välj</option>
+                            <option value="Familj/Släkt">Familj/Släkt</option>
+                            <option selected value="Vän">Vän</option>
+                            <option value="Till sig själv">Till sig själv</option>
+                        </select>
                     </div>
                 </div>
             {% endfor %}
-            <div style="text-align: end">
-                Klart granskad:
-                <button type="submit" class="btn btn btn-success" name="transaktions_list"> Spara i archive</button>
-            </div>
         </form>
+        <script>
+            ssn_list = []
+            {% for profile in profiles %}
+                ssn_list.push("{{ profile.ssn }}")
+            {% endfor %}
+            console.table(ssn_list)
+            document.getElementById('wrapper').addEventListener('change', function (event) {
+                const elem = event.target;
+                console.log(typeof (elem.value));
+                console.log(ssn_list.includes(elem.value));
+                if (ssn_list.includes(elem.value)) {
+                    console.log("TRUE")
+                    var success_elem = document.createElement("div")
+                    success_elem.innerText = "Denna person nummer är redan registrerad."
+                    success_elem.classList.add('alert-success')
+                    elem.parentElement.parentElement.appendChild(success_elem)
+                    elem.addClass("bg-success")
+                }
+            });
+        </script>
     {% endif %}
 {% endblock %}

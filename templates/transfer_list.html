@@ -28,7 +28,7 @@
             <th class="border border-primary" span="col">#</th>
             <th span="col">Datum</th>
             <th span="col">Sändaren</th>
-            <th span="col">Belopp</th>
+            <th class="text-end" span="col">Belopp</th>
             <th span="col">Mottagare</th>
             <th span="col">Anledning</th>
             <th span="col">Bank</th>
@@ -43,7 +43,7 @@
                 <th class="border border-primary" scope="row">{{ tr["id"] }}</th>
                 <td>{{ tr["date"] }}</td>
                 <td><a href="/client_profile?ssn={{ tr["sender"].ssn }}">{{ tr["sender"].ssn }}</a></td>
-                <td>{{ tr["amount"] }}</td>
+                <td class="text-end">{{ format_price(tr["amount"]) }} SEK</td>
                 <td>{{ tr["receiver"].name }}</td>
                 <td>{{ tr["reason"] }}</td>
                 <td>{{ tr["bank"] }}</td>

@@ -27,9 +27,16 @@
                 <div class="card-body p-4">
                     <div class="d-flex">
                         <div class="flex-shrink-0">
+                            {% if client.document.file %}<a href="{{ client.document.file }}">
+                            <img src="{{ client.document.file }}"
+                                 alt="Generic placeholder image" class="img-fluid"
+                                 style="width: 206px; border-radius: 10px;">
+                                </a>
+                            {% else %}
                             <img src="static/img/profile.png"
                                  alt="Generic placeholder image" class="img-fluid"
                                  style="width: 206px; border-radius: 10px;">
+                            {% endif %}
                         </div>
                         <div class="flex-grow-1 ms-3">
                             <h5 class="mb-1 ">{{ client.f_name }} {{ client.l_name }}</h5>
@@ -65,22 +72,26 @@
             </div>
 
         </div>
-    <button class="mb-3 btn btn-primary"
-            type="button"
-            data-toggle="collapse"
-            data-target="#collapseProfile"
-            aria-expanded="false"
-            aria-controls="collapseExample">Redigera Profile</button>
+        <button class="mb-3 btn btn-primary"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseProfile"
+                aria-expanded="false"
+                aria-controls="collapseExample">Redigera Profile
+        </button>
     </div>
     <div id="collapseProfile" class="collapse container-xl px-4 mt-4">
-        <hr class="mt-0 mb-4">
         <div class="row">
             <div class="col">
                 <!-- Account details card-->
                 <div class="card mb-4">
                     <div class="card-header">Redigera Profile</div>
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" enctype=multipart/form-data>
+                            <input name="id"
+                                   type="text"
+                                   value="{{ client.id }}"
+                                   style="display: none">
                             <!-- Form Row-->
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (first name)-->
@@ -107,7 +118,7 @@
                                 <!-- Form Group (location)-->
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputLocation">Telefon numer:</label>
-                                    <input class="form-control" id="inputLocation" type="text"
+                                    <input name="phone_n" class="form-control" id="inputLocation" type="text"
                                            placeholder="Enter your location" value="{{ client.telefon }}">
                                 </div>
                             </div>
@@ -146,10 +157,14 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                            <label class="small mb-1" for="inputBirthday">Uppdatera ID handlings file:</label>
-                                            <div class="custom-file">
-                                                <input type="file" class="form-control custom-file-input" id="inputGroupFile01">
-                                            </div>
+                                        <label class="small mb-1" for="inputBirthday">Uppdatera ID handlings
+                                            file:</label>
+                                        <div class="custom-file">
+                                            <input name="file_of_document"
+                                                   type="file"
+                                                   class="form-control custom-file-input"
+                                                   id="inputGroupFile01">
+                                        </div>
                                     </div>
 
 
@@ -185,24 +200,13 @@
                 aria-controls="collapse_id_{{ tr.id }}">
                 <th class="border border-primary" scope="row">{{ tr.id }}</th>
                 <td>{{ tr.date }}</td>
-                <td><a href="/client_profile?ssn={{ tr }}">{{ client.f_name }} {{ client.l_name }}</a></td>
+                <td>{{ client.f_name }} {{ client.l_name }}</td>
                 <td class="text-end">{{ format_price(tr.amount) }}</td>
                 <td>{{ tr.receiver.name }}</td>
                 <td>{{ tr.reason.name }}</td>
                 <td>{{ tr.bank.name }}</td>
             </tr>
-            <tr aria-rowspan="2"
-                id="collapse_id_{{ tr.id }}"
-                class="collapse table-info"
-                aria-labelledby="headingOne"
-                data-parent="#collapse_id_{{ tr.id }}">
-                <th colspan="2">Sändaren:</th>
-                <td>{{ tr.sender.f_name }} {{ tr }}</td>
-                <td>Tel:</td>
-                <td>{{ tr.sender.telefon }}</td>
-                <td>{{ tr.sender.email }}</td>
-                <td class="text-success">{{ tr.origin_of_money_id.name }}</td>
-            </tr>
+
             <tr aria-rowspan="2"
                 id="collapse_id_{{ tr.id }}"
                 class="collapse table-success"

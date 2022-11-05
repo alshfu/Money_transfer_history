@@ -59,7 +59,7 @@ def xlsx_reader():
             tr_date = tr_list["date"]
             tr_bank_id = tr_list.getlist("bank")[0]
             tr_sender_name = tr_list.getlist("senders_name")
-            tr_senders_ssn = tr_list.getlist("senders_ssn")
+            tr_senders_ssn = tr_list.getlist("ssn")
             #tr_senders_document = tr_list.getlist("senders_document")
             tr_senders_telefon = tr_list.getlist("telefon")
             tr_amount = tr_list.getlist("amount")
@@ -83,7 +83,7 @@ def xlsx_reader():
                 if sender_exists is True:
                     tr_sender = Senders.query.filter_by(ssn=tr_senders_ssn[i]).first()
                 else:
-                    tr_sender_document = Documents(type_of_docs=type_of_senders_document[i],
+                    tr_sender_document = Documents(type_of_docs="",
                                                    expire_date=expire_date_of_senders_document[i],
                                                    file="")
                     db.session.add(tr_sender_document)

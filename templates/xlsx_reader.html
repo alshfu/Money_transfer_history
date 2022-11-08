@@ -314,7 +314,8 @@
         <script>
             ssn_list = []
             {% for profile in profiles %}
-                ssn_list.push("{{ profile.ssn }}")
+               // ssn_list.push("{{ profile.ssn }}")
+                ssn_list.push({ssn:"{{profile.ssn}}",name:"{{profile.f_name}}"})
             {% endfor %}
             console.table(ssn_list)
             document.getElementById('wrapper').addEventListener('change', function (event) {
@@ -322,11 +323,22 @@
                 var parent_elem = elem.parentElement.parentElement
                 var new_profile_elem = parent_elem.getElementsByClassName("new_profile")[0]
                 var exist_profile = parent_elem.getElementsByClassName("exist_profile")[0]
-                console.log(ssn_list.includes(elem.value))
-                if (ssn_list.includes(elem.value)) {
+                var profile_name = parent_elem.getElementsByClassName("alert")[0].textContent.split(":")[1].trim()
+                console.log("!!!!!"+profile_name)
+
+                console.log(ssn_list.includes({ssn: elem.value}))
+                console.log(ssn_list.some(item => item.ssn === elem.value));
+                for (let elem  of ssn_list) {
+                    console.log(elem.ssn)
+                }
+                if (ssn_list.some(item => item.ssn === elem.value)) {
                     exist_profile.style.display = "";
+                    exist_profile.textContent = (elem.value + " tillhör kunden med namn " + ssn_list.find(item => item.ssn === elem.value).name )
+                    if (ssn_list.find(item => item.ssn === elem.value).name != profile_name){
+                        exist_profile.style.background = "red"
+                    }
                     new_profile_elem.style.display = "none";
-                } else if (ssn_list.includes(elem.value) == false) {
+                } else if (ssn_list.some(item => item.ssn === elem.value) == false) {
                     exist_profile.style.display = "none";
                     new_profile_elem.style.display = "";
                 }

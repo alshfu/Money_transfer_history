@@ -1,11 +1,10 @@
 from flask import render_template, request
 
 from DataBase.Sender import Senders
-from DataBase.Transactions import MoneyTransactions
 
 def client_list():
     result = []
-    total_amount = 0
+    clients_list=[]
     if request.method == "POST":
         if 'search' in request.form:
             search_value_by_ssn = Senders.query.filter_by(ssn=request.form.getlist("search")[0]).all()
@@ -16,5 +15,8 @@ def client_list():
     for client in clients_list:
         result.append(client)
 
+    clients_list.clear()
+    for elem in result:
+        print(elem.f_name)
 
     return render_template("client_list.html", result=result)

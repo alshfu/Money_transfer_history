@@ -88,8 +88,8 @@ def xlsx_reader():
                                                    file="")
                     db.session.add(tr_sender_document)
                     db.session.flush()
-                    tr_sender = Senders(l_name=tr_sender_name[i].split()[0],
-                                        f_name=tr_sender_name[i].split()[1],
+                    tr_sender = Senders(l_name="tr_sender_name[i].split()[0]",
+                                        f_name=tr_sender_name[i],
                                         ssn=tr_senders_ssn[i],
                                         address=tr_senders_address[i],
                                         phone_number=tr_senders_telefon[i],

@@ -5,24 +5,18 @@ from DataBase.Transactions import MoneyTransactions
 
 def transfer_list():
     result = []
+    transaction_list = []
     if request.method == "POST":
         if 'search' in request.form:
-            search_request = request.form.getlist("search")[0].replace(" ","")
-            search_value_by_ssn = MoneyTransactions.query.filter_by(sender_ssn=search_request).all()
-            search_value_by_amount = MoneyTransactions.query.filter_by(amount=search_request).all()
-            search_value_by_date = MoneyTransactions.query.filter_by(date=search_request).all()
-            search_value_by_reference = MoneyTransactions.query.filter_by(reference=search_request).all()
-            if len(search_value_by_ssn) != 0:
-                transaction_list = search_value_by_ssn
-            elif len(search_value_by_amount) != 0:
-                transaction_list = search_value_by_amount
-            elif len(search_value_by_date) != 0:
-                transaction_list = search_value_by_date
+            search_request = request.form.getlist("search")[0].replace(" ", "")
+            if len(MoneyTransactions.query.filter_by(sender_ssn=search_request).all()) != 0:
+                transaction_list = MoneyTransactions.query.filter_by(sender_ssn=search_request).all()
+            elif len(MoneyTransactions.query.filter_by(amount=search_request).all()) != 0:
+                transaction_list = MoneyTransactions.query.filter_by(amount=search_request).all()
+            elif len(MoneyTransactions.query.filter_by(date=search_request).all()) != 0:
+                transaction_list = MoneyTransactions.query.filter_by(date=search_request).all()
             else:
-                transaction_list = search_value_by_reference
-
-
-
+                transaction_list = MoneyTransactions.query.filter_by(reference=search_request).all()
     else:
         transaction_list = MoneyTransactions.query.all()
 
@@ -38,5 +32,5 @@ def transfer_list():
               "bank": transaction.bank.name,
               "sender": transaction.sender}
         result.append(tr)
-
+    transaction_list.clear()
     return render_template("transfer_list.html", result=result)

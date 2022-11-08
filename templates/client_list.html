@@ -26,8 +26,7 @@
     <table class="table">
         <thead class="">
         <tr class="border">
-            <th span="col">Förnamn</th>
-            <th span="col">Efternamn</th>
+            <th span="col">För och efternamn</th>
             <th span="col">Persson nummer</th>
             <th span="col">Antal överföraningar</th>
             <th span="col">Typ av ID handling</th>
@@ -38,7 +37,6 @@
         {% if result %}{% for client in result %}
             <tr>
                 <td>{{ client.f_name }}</td>
-                <td>{{ client.l_name }}</td>
                 <td><a href="/client_profile?ssn={{ client.ssn }}">{{ client.ssn }}</a></td>
                 <td>{{ client.transactions|length }}</td>
                 <td>{{ client.document.type_of_docs }}</td>

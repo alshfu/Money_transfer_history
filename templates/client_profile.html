@@ -96,39 +96,36 @@
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (first name)-->
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputFirstName">Förnamn:</label>
+                                    <label class="small mb-1" for="inputFirstName">För och Efter namn</label>
                                     <input name="f_name" class="form-control" id="inputFirstName" type="text"
                                            value="{{ client.f_name }}">
                                 </div>
-                                <!-- Form Group (last name)-->
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputLastName">Efternamn:</label>
-                                    <input name="l_name" class="form-control" id="inputLastName" type="text"
-                                           value="{{ client.l_name }}">
-                                </div>
-                            </div>
-                            <!-- Form Row        -->
-                            <div class="row gx-3 mb-3">
-                                <!-- Form Group (organization name)-->
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputOrgName">Personnummer:</label>
                                     <input name="ssn" class="form-control" id="inputOrgName" type="text"
                                            value="{{ client.ssn }}">
                                 </div>
+                                <!-- Form Group (last name)-->
+                            </div>
+                            <!-- Form Row        -->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (organization name)-->
+
                                 <!-- Form Group (location)-->
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputLocation">Telefon numer:</label>
                                     <input name="phone_n" class="form-control" id="inputLocation" type="text"
                                            placeholder="Enter your location" value="{{ client.telefon }}">
                                 </div>
-                            </div>
-                            <div class="row gx-3 mb-3">
-                                <!-- Form Group (email address)-->
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputEmailAddress">E-post:</label>
                                     <input class="form-control" id="inputEmailAddress" type="email" name="e_mail"
                                            value="{{ client.email }}">
                                 </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (email address)-->
+
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputPhone">Giltighets datum för id handling:</label>
                                     <input class="form-control" id="inputPhone"
@@ -200,7 +197,7 @@
                 aria-controls="collapse_id_{{ tr.id }}">
                 <th class="border border-primary" scope="row">{{ tr.id }}</th>
                 <td>{{ tr.date }}</td>
-                <td>{{ client.f_name }} {{ client.l_name }}</td>
+                <td>{{ client.f_name }}</td>
                 <td class="text-end">{{ format_price(tr.amount) }}</td>
                 <td>{{ tr.receiver.name }}</td>
                 <td>{{ tr.reason.name }}</td>

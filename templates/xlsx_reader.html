@@ -152,7 +152,7 @@
                                type="text"
                                aria-label="Last name"
                                style="max-width: 277px"
-                               class="form-control text-end"
+                               class="form-control"
                                required>
 
                     </div>
@@ -165,13 +165,6 @@
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="row gx-3 mb-3">
-                                        <!-- Form Group (organization name)-->
-                                        <div class="col-md-6">
-                                            <label class="small mb-1" for="inputEmailAddress">E-post:</label>
-                                            <input class="form-control" id="inputEmailAddress" type="email"
-                                                   name="e_mail"
-                                                   value="">
-                                        </div>
                                         <!-- Form Group (telefon)-->
                                         <div class="col-md-6">
                                             <label class="small mb-1" for="inputLocation">Telefon numer:</label>
@@ -179,18 +172,26 @@
                                                    class="form-control"
                                                    id="inputLocation"
                                                    type="text"
-                                                   placeholder="0{{ range(762227788, 768885544) | random }}" value="">
+                                                   placeholder="0{{ range(762227788, 768885544) | random }}" value=""
+                                                   required>
+                                        </div>
+                                        <!-- Form Group (organization name)-->
+                                        <div class="col-md-6">
+                                            <label class="small mb-1" for="inputEmailAddress">E-post:</label>
+                                            <input class="form-control" id="inputEmailAddress" type="email"
+                                                   name="e_mail"
+                                                   value="">
                                         </div>
                                     </div>
                                     <div class="row gx-3 mb-3">
                                         <!-- Form Group (expire_date)-->
 
-                                        <div class="col-md-6">
-                                            <label class="small mb-1">Giltighets datum för id
-                                                handling:</label>
-                                            <input class="form-control"
-                                                   name="expire_date" value="">
-                                        </div>
+                                        {#                                        <div class="col-md-6">#}
+                                        {#                                            <label class="small mb-1">Giltighets datum för id#}
+                                        {#                                                handling:</label>#}
+                                        {#                                            <input class="form-control"#}
+                                        {#                                                   name="expire_date" value="">#}
+                                        {#                                        </div>#}
                                         <!-- div class="col-md-6">
                                             <label class="small mb-1" for="inputBirthday">Typ av id handling</label>
                                             <select name="type_of_senders_document"
@@ -312,35 +313,98 @@
             {% endfor %}
         </form>
         <script>
+            function first_part_off_ssn_check(data) {
+                if (data !== 'undefined') {
+                    console.log(parseInt(data))
+                    if (String(parseInt(data)).length === 8) {
+                        return true
+                    } else return false
+                } else return false
+            }
+
+            function second_part_off_ssn_check(data) {
+                if (typeof data !== 'undefined') {
+                    console.log()
+                    if (String(parseInt(data)).length === 4) {
+                        return true
+                    } else return false
+                } else return false
+            }
+
+            function check_ssn_array(ssn_array) {
+                if (ssn_array.length === 2) {
+                    if (first_part_off_ssn_check(ssn_array[0]) === true && first_part_off_ssn_check(ssn_array[0]) === true) {
+                        return true
+                    }
+                } else return false
+            }
+
+            function create_ssn_array(ssn_value) {
+                ssn_array = []
+                if (ssn_value.length === 13) {
+                    if (ssn_value.split('-') !== 'undefined') {
+                        ssn_array = ssn_value.split('-')
+                    }
+                } else if (String(parseInt(ssn_value)).length === 12) {
+                    ssn_array = ssn_value.match(/.{1,8}/g) ?? []
+
+                } else {
+                    console.log("some think wrong with ssn")
+                }
+                return ssn_array
+            }
+
+            function validation_off_ssn(element) {
+                console.log("Validation of SSN")
+                let ssn_array = []
+                let ssn_value = element.value.trim()
+                ssn_array = create_ssn_array(ssn_value)
+                if (check_ssn_array(ssn_array) === true) {
+                    console.log("SSN looks right")
+                    element.value = ssn_array[0]+"-"+ssn_array[1]
+                    return true
+                } else if (check_ssn_array(ssn_array) === false) {
+                    console.log("some think is wrong")
+                    return false
+                }
+
+            }
+
             ssn_list = []
             {% for profile in profiles %}
-               // ssn_list.push("{{ profile.ssn }}")
-                ssn_list.push({ssn:"{{profile.ssn}}",name:"{{profile.f_name}}"})
+                // ssn_list.push("{{ profile.ssn }}")
+                ssn_list.push({ssn: "{{profile.ssn}}", name: "{{profile.f_name}}"})
             {% endfor %}
             console.table(ssn_list)
             document.getElementById('wrapper').addEventListener('change', function (event) {
                 const elem = event.target;
-                var parent_elem = elem.parentElement.parentElement
-                var new_profile_elem = parent_elem.getElementsByClassName("new_profile")[0]
-                var exist_profile = parent_elem.getElementsByClassName("exist_profile")[0]
-                var profile_name = parent_elem.getElementsByClassName("alert")[0].textContent.split(":")[1].trim()
-                console.log("!!!!!"+profile_name)
-
-                console.log(ssn_list.includes({ssn: elem.value}))
-                console.log(ssn_list.some(item => item.ssn === elem.value));
-                for (let elem  of ssn_list) {
-                    console.log(elem.ssn)
-                }
-                if (ssn_list.some(item => item.ssn === elem.value)) {
-                    exist_profile.style.display = "";
-                    exist_profile.textContent = (elem.value + " tillhör kunden med namn " + ssn_list.find(item => item.ssn === elem.value).name )
-                    if (ssn_list.find(item => item.ssn === elem.value).name != profile_name){
-                        exist_profile.style.background = "red"
+                console.log(elem.name)
+                if (elem.name === "ssn") {
+                    var parent_elem = elem.parentElement.parentElement
+                    var new_profile_elem = parent_elem.getElementsByClassName("new_profile")[0]
+                    var exist_profile = parent_elem.getElementsByClassName("exist_profile")[0]
+                    var profile_name = parent_elem.getElementsByClassName("alert")[0].textContent.split(":")[1].trim()
+                    if (validation_off_ssn(elem) === true) {
+                        for (let elem of ssn_list) {
+                            console.log(elem.ssn)
+                        }
+                        if (ssn_list.some(item => item.ssn === elem.value)) {
+                            exist_profile.style.display = "";
+                            exist_profile.textContent = (elem.value + " tillhör kunden med namn " + ssn_list.find(item => item.ssn === elem.value).name)
+                            if (ssn_list.find(item => item.ssn === elem.value).name != profile_name) {
+                                exist_profile.style.background = "red"
+                            }
+                            new_profile_elem.style.display = "none";
+                        } else if (ssn_list.some(item => item.ssn === elem.value) == false) {
+                            exist_profile.style.display = "none";
+                            new_profile_elem.style.display = "";
+                        }
+                    } else {
+                        exist_profile.classList.remove("alert-success")
+                        exist_profile.classList.add("alert-danger")
+                        exist_profile.style.display = ""
+                        exist_profile.textContent = "Något är fel med persson nummer ange persson nummer i rätt format ÅÅÅÅMMDD-XXXX eller ÅÅÅÅMMDDXXXX"
                     }
-                    new_profile_elem.style.display = "none";
-                } else if (ssn_list.some(item => item.ssn === elem.value) == false) {
-                    exist_profile.style.display = "none";
-                    new_profile_elem.style.display = "";
                 }
 
 

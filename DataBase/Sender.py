@@ -26,7 +26,7 @@ class Senders(db_model):
     f_name = db_column(db.String(20))
     l_name = db_column(db.String(20))
     ssn = db_column(db.String(13), unique=True)
-    telefon = db_column(db.String(13), unique=True)
+    telefon = db_column(db.String(13))
     email = db_column(db.String(13))
     address = db_column(db.Text())
     transactions = db.relationship('MoneyTransactions', back_populates="sender")

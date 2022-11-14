@@ -1,3 +1,4 @@
+{% include "amount_macro.html" %}
 {%- macro format_price(price, thousand_separator=' ', decimal_separator='.', decimal_places=2) -%}
 {%- set price_as_string = price | string -%}
 {%- set price_split = price_as_string.split('.') -%}

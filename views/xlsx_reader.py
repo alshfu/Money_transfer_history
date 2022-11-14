@@ -73,52 +73,54 @@ def xlsx_reader():
             expire_date_of_senders_document = tr_list.getlist("expire_date")
             type_of_senders_document = tr_list.getlist("type_of_senders_document")
             #file_of_senders_document = tr_list.getlist("file_of_senders_document")
-
-            for i in range(len(tr_sender_name)):
-                receiver = Receivers(name=tr_receiver_name[i], relation_to_sender=tr_relationship[i],
-                                     country=tr_country[i])
-                db.session.add(receiver)
-                db.session.flush()
-                sender_exists = db.session.query(db.exists().where(Senders.ssn == tr_senders_ssn[i])).scalar()
-                if sender_exists is True:
-                    tr_sender = Senders.query.filter_by(ssn=tr_senders_ssn[i]).first()
-                else:
-                    tr_sender_document = Documents(type_of_docs="",
-                                                   expire_date=expire_date_of_senders_document[i],
-                                                   file="")
-                    db.session.add(tr_sender_document)
+            try:
+                for i in range(len(tr_sender_name)):
+                    receiver = Receivers(name=tr_receiver_name[i], relation_to_sender=tr_relationship[i],
+                                         country=tr_country[i])
+                    db.session.add(receiver)
                     db.session.flush()
-                    tr_sender = Senders(l_name="tr_sender_name[i].split()[0]",
-                                        f_name=tr_sender_name[i],
-                                        ssn=tr_senders_ssn[i],
-                                        address=tr_senders_address[i],
-                                        phone_number=tr_senders_telefon[i],
-                                        document_id=tr_sender_document.id,
-                                        document=tr_sender_document)
+                    sender_exists = db.session.query(db.exists().where(Senders.ssn == tr_senders_ssn[i])).scalar()
+                    if sender_exists is True:
+                        tr_sender = Senders.query.filter_by(ssn=tr_senders_ssn[i]).first()
+                    else:
+                        tr_sender_document = Documents(type_of_docs="",
+                                                       expire_date="åååå-mm-dd",
+                                                       file="")
+                        db.session.add(tr_sender_document)
+                        db.session.flush()
+                        tr_sender = Senders(l_name="",
+                                            f_name=tr_sender_name[i],
+                                            ssn=tr_senders_ssn[i],
+                                            address=tr_senders_address[i],
+                                            phone_number=tr_senders_telefon[i],
+                                            document_id=tr_sender_document.id,
+                                            document=tr_sender_document)
 
-                tr_bank = Banks.query.filter_by(id=tr_bank_id).first()
+                    tr_bank = Banks.query.filter_by(id=tr_bank_id).first()
 
-                reason = Reasons.query.filter_by(id=tr_reason[i]).first()
-                origin = Origins.query.filter_by(id=tr_origin[i]).first()
+                    reason = Reasons.query.filter_by(id=tr_reason[i]).first()
+                    origin = Origins.query.filter_by(id=tr_origin[i]).first()
 
-                tr = MoneyTransactions(tr_amount=tr_amount[i],
-                                       tr_reference=tr_reference[i],
-                                       reason_id=tr_reason[i],
-                                       reason=reason,
-                                       tr_fee="1",
-                                       tr_date=tr_date[0:10],
-                                       bank_id=tr_bank_id,
-                                       bank=tr_bank,
-                                       sender=tr_sender,
-                                       sender_ssn=tr_senders_ssn[i],
-                                       receiver=receiver,
-                                       receiver_id=receiver.id,
-                                       origin_of_money=origin,
-                                       origin_of_money_id=tr_origin[i])
+                    tr = MoneyTransactions(tr_amount=tr_amount[i],
+                                           tr_reference=tr_reference[i],
+                                           reason_id=tr_reason[i],
+                                           reason=reason,
+                                           tr_fee="1",
+                                           tr_date=tr_date[0:10],
+                                           bank_id=tr_bank_id,
+                                           bank=tr_bank,
+                                           sender=tr_sender,
+                                           sender_ssn=tr_senders_ssn[i],
+                                           receiver=receiver,
+                                           receiver_id=receiver.id,
+                                           origin_of_money=origin,
+                                           origin_of_money_id=tr_origin[i])
 
-                db.session.add(tr_sender)
-                db.session.add(tr)
-                db.session.commit()
+                    db.session.add(tr_sender)
+                    db.session.add(tr)
+                    db.session.commit()
+            except IndexError:
+                pass
         else:
             pass
 

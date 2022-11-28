@@ -60,7 +60,7 @@ def xlsx_reader():
             tr_bank_id = tr_list.getlist("bank")[0]
             tr_sender_name = tr_list.getlist("senders_name")
             tr_senders_ssn = tr_list.getlist("ssn")
-            #tr_senders_document = tr_list.getlist("senders_document")
+            # tr_senders_document = tr_list.getlist("senders_document")
             tr_senders_telefon = tr_list.getlist("telefon")
             tr_amount = tr_list.getlist("amount")
             tr_reason = tr_list.getlist("reason")
@@ -72,7 +72,7 @@ def xlsx_reader():
             tr_country = tr_list.getlist("country")
             expire_date_of_senders_document = tr_list.getlist("expire_date")
             type_of_senders_document = tr_list.getlist("type_of_senders_document")
-            #file_of_senders_document = tr_list.getlist("file_of_senders_document")
+            # file_of_senders_document = tr_list.getlist("file_of_senders_document")
             try:
                 for i in range(len(tr_sender_name)):
                     receiver = Receivers(name=tr_receiver_name[i], relation_to_sender=tr_relationship[i],
@@ -100,25 +100,25 @@ def xlsx_reader():
 
                     reason = Reasons.query.filter_by(id=tr_reason[i]).first()
                     origin = Origins.query.filter_by(id=tr_origin[i]).first()
+                    if tr_senders_ssn[i] != '' or tr_senders_ssn[i] is not None:
+                        tr = MoneyTransactions(tr_amount=tr_amount[i],
+                                               tr_reference=tr_reference[i],
+                                               reason_id=tr_reason[i],
+                                               reason=reason,
+                                               tr_fee="1",
+                                               tr_date=tr_date[0:10],
+                                               bank_id=tr_bank_id,
+                                               bank=tr_bank,
+                                               sender=tr_sender,
+                                               sender_ssn=tr_senders_ssn[i],
+                                               receiver=receiver,
+                                               receiver_id=receiver.id,
+                                               origin_of_money=origin,
+                                               origin_of_money_id=tr_origin[i])
 
-                    tr = MoneyTransactions(tr_amount=tr_amount[i],
-                                           tr_reference=tr_reference[i],
-                                           reason_id=tr_reason[i],
-                                           reason=reason,
-                                           tr_fee="1",
-                                           tr_date=tr_date[0:10],
-                                           bank_id=tr_bank_id,
-                                           bank=tr_bank,
-                                           sender=tr_sender,
-                                           sender_ssn=tr_senders_ssn[i],
-                                           receiver=receiver,
-                                           receiver_id=receiver.id,
-                                           origin_of_money=origin,
-                                           origin_of_money_id=tr_origin[i])
-
-                    db.session.add(tr_sender)
-                    db.session.add(tr)
-                    db.session.commit()
+                        db.session.add(tr_sender)
+                        db.session.add(tr)
+                        db.session.commit()
             except IndexError:
                 pass
         else:
@@ -165,21 +165,25 @@ def get_information_from_xlsx_file(file):
         if i > 18:
             # sender_name = ws.cell(row=i, column=1).value
             # receiver_name = ws.cell(row=i, column=3).value
-            # reference = ws.cell(row=i, column=4).value
+            reference = ws.cell(row=i, column=4).value
             total_amount += float(ws.cell(row=i, column=5).value)
-            # avi = ws.cell(row=i, column=6).value
-            # address = ws.cell(row=i, column=7).value
-            res.append(
-                {
-                    "id": str(i - 18),
-                    "sender_name": ws.cell(row=i, column=1).value,
-                    "receiver_name": ws.cell(row=i, column=3).value,
-                    "reference": ws.cell(row=i, column=4).value,
-                    "amount": ws.cell(row=i, column=5).value,
-                    "avi": ws.cell(row=i, column=6).value,
-                    "address": ws.cell(row=i, column=7).value,
-                }
-            )
+            transaction_ = MoneyTransactions.query.filter_by(date=ws.cell(row=5, column=1).value,
+                                                             reference=reference,
+                                                             amount=ws.cell(row=i, column=5).value).first()
+            if transaction_ is None:
+                # avi = ws.cell(row=i, column=6).value
+                # address = ws.cell(row=i, column=7).value
+                res.append(
+                    {
+                        "id": str(i - 18),
+                        "sender_name": ws.cell(row=i, column=1).value,
+                        "receiver_name": ws.cell(row=i, column=3).value,
+                        "reference": ws.cell(row=i, column=4).value,
+                        "amount": ws.cell(row=i, column=5).value,
+                        "avi": ws.cell(row=i, column=6).value,
+                        "address": ws.cell(row=i, column=7).value,
+                    }
+                )
     return res, datum, total_amount
 
 

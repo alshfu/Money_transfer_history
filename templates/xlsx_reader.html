@@ -33,7 +33,7 @@
                        value="{{ date }}"
                        class="input-group-text bg-white" readonly>
 
-                <span class="input-group-text">Antal Transaktioner: </span>
+                <span class="input-group-text">Antal Transaktioner:</span>
                 <div class="input-group-text bg-white">{{ result|length }}</div>
 
                 <span class="input-group-text">Totala Belopp: </span>
@@ -42,7 +42,7 @@
                 <span class="input-group-text">Banken: </span>
                 <select name="bank" class="text-left bg-white form-control form-select"
                         aria-label="Default select example"
-                        style="text-align: end" required>
+                        style="text-align: end" >
                     <option selected disabled value="">Välja Bank</option>
                     <option value="2">Danske Banken</option>
                     <option value="1">Nordea</option>
@@ -116,7 +116,7 @@
                     <select name="reason"
                             class="text-left form-control form-select"
                             aria-label="Default select example"
-                            style="text-align: end" required>
+                            style="text-align: end" >
                         {% for reason in reasons %}
                             <option selected value="{{ reason.id }}">{{ reason.name }}</option>
                         {% endfor %}
@@ -127,7 +127,7 @@
                     <select name="origin"
                             class="text-left form-control form-select"
                             aria-label="Default select example"
-                            style="text-align: end" required>
+                            style="text-align: end" >
                         {% for origin in origins %}
                             <option selected value="{{ origin.id }}">{{ origin.name }}</option>
                         {% endfor %}
@@ -153,7 +153,7 @@
                                aria-label="Last name"
                                style="max-width: 277px"
                                class="form-control"
-                               required>
+                               >
 
                     </div>
                     <div class="exist_profile alert alert-success" role="alert" style="display: none">
@@ -173,7 +173,7 @@
                                                    id="inputLocation"
                                                    type="text"
                                                    placeholder="0{{ range(762227788, 768885544) | random }}" value=""
-                                                   required>
+                                                   >
                                         </div>
                                         <!-- Form Group (organization name)-->
                                         <div class="col-md-6">
@@ -229,7 +229,7 @@
                                aria-label="Last name"
                                style="max-width: 277px"
                                class="form-control"
-                               required/-->
+                               /-->
                     <!-- expire date Title -->
                     <!-- Expire date -->
                     <!-- input name="expire_date"
@@ -238,7 +238,7 @@
                            aria-label=""
                            style="max-width: 236px"
                            class="form-control"
-                           required/ -->
+                           / -->
                     <!-- Document file Title -->
                     <!-- address -->
                     <!-- address -->
@@ -266,7 +266,7 @@
                                 class="text-left form-control form-select"
                                 aria-label="Default select example"
                                 style="text-align: end; max-width: 277px"
-                                required>
+                                >
                             <!--option selected disabled>Välja typ av ID-handling</option-->
                             <option value="">Välj</option>
                             <option value="Angola" selected="selected">Angola</option>
@@ -301,7 +301,7 @@
                                 class="text-left form-control form-select"
                                 aria-label="Default select example"
                                 style="text-align: end; max-width: 277px"
-                                required>
+                                >
                             <!--option selected disabled>Välja typ av ID-handling</option-->
                             <option>Välj</option>
                             <option value="Familj/Släkt">Familj/Släkt</option>
@@ -410,5 +410,9 @@
 
             });
         </script>
+    {% else %}
+        <div class="alert text-center alert-warning" role="alert">
+            Ser ut som att det fins inga o besparade överföringar
+        </div>
     {% endif %}
 {% endblock %}

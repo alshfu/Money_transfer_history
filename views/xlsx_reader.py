@@ -139,6 +139,10 @@ def xlsx_reader():
             # return redirect(url_for("xlsx_reader", data_from_file))
             reasons = Reasons.query.all()
             origins = Origins.query.all()
+            if len(data_from_file) == 0:
+                data_from_file.append('None')
+            print(data_from_file)
+            print(len(data_from_file))
             return render_template("xlsx_reader.html",
                                    profiles=profiles_list,
                                    result=data_from_file,
@@ -184,6 +188,7 @@ def get_information_from_xlsx_file(file):
                         "address": ws.cell(row=i, column=7).value,
                     }
                 )
+
     return res, datum, total_amount
 
 
